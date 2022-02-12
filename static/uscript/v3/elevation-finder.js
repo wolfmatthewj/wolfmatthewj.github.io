@@ -4,10 +4,11 @@ function Gload()
 function getElevation(event)
 {console.log("getElevation");ftn_processgetElevation(event.latlng);outputDiv.innerHTML="Please Wait...";}
 function ftn_processgetElevation(clickedLocation)
-{var locations=[];locations.push(clickedLocation);console.log(clickedLocation);var reqLat=clickedLocation.lat.toFixed(5);var reqLng=clickedLocation.lng.toFixed(5);var StrURL="ajax/elevation-service.php?v=3&lat="+reqLat+"&lng="+reqLng;console.log(StrURL);$.ajax({url:StrURL,success:function(result){if(result)
-{console.log(result);var elev=result.elevations[0].elevation;outputDiv.innerHTML=elev.toFixed(numberofdecimalplaces)+" m or "+(elev*3.2808399).toFixed(numberofdecimalplaces)+" feet";outputDiv.innerHTML+="<br/ > Location :"+clickedLocation.lat.toFixed(numberofdecimalplaceslatlng)+","+clickedLocation.lng.toFixed(numberofdecimalplaceslatlng);var marker=ftn_LG_PlaceMarker(0,clickedLocation,elev.toFixed(numberofdecimalplaces)+" m / "+(elev*3.2808399).toFixed(numberofdecimalplaces)+" feet",true);marker.on('click',function(e){console.log(e.latlng);marker.remove();});routeMarkers.push(marker);}
-else
-{outputDiv.innerHTML="No results found";}},error:function(data,textStatus,jqXHR){console.log(textStatus);outputDiv.innerHTML="No results";}});}
+{var locations=[];locations.push(clickedLocation);console.log(clickedLocation);var reqLat=clickedLocation.lat.toFixed(5);var reqLng=clickedLocation.lng.toFixed(5);var myReport="You asked for latitude "+reqLat+" and longitute "+reqLng;console.log(myReport);window.alert(myReport);}
+// {var locations=[];locations.push(clickedLocation);console.log(clickedLocation);var reqLat=clickedLocation.lat.toFixed(5);var reqLng=clickedLocation.lng.toFixed(5);var StrURL="ajax/elevation-service.php?v=3&lat="+reqLat+"&lng="+reqLng;console.log(StrURL);$.ajax({url:StrURL,success:function(result){if(result)
+// {console.log(result);var elev=result.elevations[0].elevation;outputDiv.innerHTML=elev.toFixed(numberofdecimalplaces)+" m or "+(elev*3.2808399).toFixed(numberofdecimalplaces)+" feet";outputDiv.innerHTML+="<br/ > Location :"+clickedLocation.lat.toFixed(numberofdecimalplaceslatlng)+","+clickedLocation.lng.toFixed(numberofdecimalplaceslatlng);var marker=ftn_LG_PlaceMarker(0,clickedLocation,elev.toFixed(numberofdecimalplaces)+" m / "+(elev*3.2808399).toFixed(numberofdecimalplaces)+" feet",true);marker.on('click',function(e){console.log(e.latlng);marker.remove();});routeMarkers.push(marker);}
+// else
+// {outputDiv.innerHTML="No results found";}},error:function(data,textStatus,jqXHR){console.log(textStatus);outputDiv.innerHTML="No results";}});}
 function ftnResetMap()
 {if(routeMarkers)
 {for(i in routeMarkers)
