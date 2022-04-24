@@ -1,7 +1,63 @@
-  .divs {
+@import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@700&family=Capriola&family=Caveat+Brush&family=New+Rocker&family=Waiting+for+the+Sunrise&family=ZCOOL+QingKe+HuangYou&display=swap');
+.divs {
    margin-top: 1.5em;
    margin-bottom: 1.5em;
    margin-left: 3%;
    margin-right: 3%;
-   float: right;
+	font-family: 'Capriola';
+   margin: 5px;
+	width: 25%;
+   float: left;
+	font-size: 10pt;
   }
+  p {
+  font-size: 20pt;
+  }
+  .main-text {
+	font-family: 'ZCOOL QingKe HuangYou', sans-serif;
+	font-size: 15pt;
+  	background-color: green;
+	width: 62%;
+	margin-left: 
+
+
+  }
+  h3 {
+       font-size: 35pt;
+		 font-family: 'Caveat Brush';
+		 }
+   h4 {
+       font-size: 23pt;
+		 font-family: 'New Rocker'
+		 }
+.header {
+   margin-top: 10px;
+	margin-bottom: 10px;
+	text-align: center;
+	font-size: 60pt;
+	font-family: 'Cabin sketch'
+}
+
+.welcome {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	margin-top: 1px;
+	margin-bottom: 1px;
+	text-align: center;
+	font-size: 20pt
+	}
+	a {
+		font-family: 'Waiting for the sunrise';
+		font-size: 16.5pt
+		}
+
+	ul {
+	list-style-image: url('');
+	}
+
+
+
+
+
+
+		 
