@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Elevation Getter</title>
+	<meta charset="utf-8">
+</head>
+<body>
+<div id="results">
+<p>Results go here</p>
+</div>
+</body>
+<script>
+	function getAllElevations() {
+		myRes = document.getElementById('results')
+		for (var lat = 67; lat >= -67; lat--) {
+			for (var lng = 180; lng >= -180; lng--) {
+				var api_url = 'https://api.open-elevation.com/api/v1/lookup?locations=' + lat + ',' + lng;
+				console.log(api_url)
+			    fetch(api_url)
+			        // .then(res => res.text())
+			        .then(res => res.json())
+			        .then(res => {
+			        	const node = document.createElement("p");
+						const textnode = document.createTextNode(res.results[0]);
+						node.appendChild(textnode);
+			            myRes.appendChild(node)
+			    });
+			}
+		}
+	}
+	getAllElevations();
+</script>
+</html>

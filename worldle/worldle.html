@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<title>Worldle</title>
 	<meta charset="utf-8">
@@ -49,6 +49,20 @@
 			padding-left: 0.25em;
 			padding-right: 0.25em;
 		}
+		#solution {
+			font-family: 'Poppins', sans-serif;
+			display: block;
+			font-size: 3em;
+			text-align: center;
+			margin-top: 1em;
+		}
+		#loading {
+			font-family: 'Poppins', sans-serif;
+			display: block;
+			font-size: 3em;
+			text-align: center;
+			margin-top: 1em;
+		}
 	</style>
 </head>
 <body>
@@ -57,16 +71,49 @@
 <h2>Map</h2>
 <p id="indicator"><span id="indicator1"> </span><span id="indicator2"> </span><span id="indicator3"> </span></p>
 <div id="map" class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0"><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a></div></div></div></div>
-<button type="button" onclick="give_up()">Give up</button>
+<button type="button" onclick="end_game()">Give up</button>
+<p id="loading">Hiding the treasure . . .</p>
+<p id="solution">0</p>
+<p id="guess"></p>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="map_tools.js"></script>
+<script src="elevation.js"></script>
 <script>
-	function getRandomInt(max) {
-		return Math.floor(Math.random() * max);
-	}
-	var start_lat = getRandomInt(180) - 90;
-	var start_long = getRandomInt(360) - 180;
-	var target_lat = getRandomInt(180) - 90;
-	var target_long = getRandomInt(360) - 180;
+	// var target_el = 0
+	var start_lat = randomLat();
+	var start_long = randomLng();
+	var target_lat = randomLat();
+	var target_long = randomLng();
 	var target = L.latLng(target_lat, target_long)
+	// console.log(target)
+	writeElevation(target)
+	// getElevation(target)
+	// target_el = callElevation(target)
+	// callElevation(target)
+	// console.log(target_el)
+	// If the elevation of the randomly chosen point is 0, it is probably in the ocean.
+	// Pick a different spot
+    var sol = document.getElementById('solution')
+    var load = document.getElementById('loading')
+    // console.log(typeof sol.innerHTML)
+	// This just isn't working. Too crashy. I need my own json file of possible locations
+  //   while (sol.innerHTML == '0') {
+		// target_lat = randomLat();
+		// target_long = randomLng();
+		// target = L.latLng(target_lat, target_long)
+		// writeElevation(target)
+  //   }
+  //   load.style.visibility = "hidden"
+	// Try the async await stuff. I really can't do this as an async.
+	// while (target_el == 0) {
+	// 	// console.log('el = ' + target_el)
+	// 	target_lat = getRandomInt(180) - 90;
+	// 	target_long = getRandomInt(360) - 180;
+	// 	console.log('Looking for elevation of ' + target_lat + ',' + target_long)
+	// 	target = L.latLng(target_lat, target_long)
+	// 	callElevation(target)
+	// 	console.log('el = ' + target_el)
+	// }
 	var southWest = L.latLng(-89.98155760646617, -Infinity);
 	var northEast = L.latLng(89.99346179538875, Infinity);
 	var bounds = L.latLngBounds(southWest, northEast);
@@ -79,14 +126,6 @@
 		minZoom: 1,
 	});
 
-	// var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-		// maxZoom: 18,
-		// attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-			// 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-		// id: 'mapbox/streets-v11',
-		// tileSize: 512,
-		// zoomOffset: -1
-	// }).addTo(map);
 	
 	var googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
 	    maxZoom: 20,
@@ -119,7 +158,7 @@
 	});
 	function analyze_guess(ll, t) {
 		if (map.distance(ll, t) < 500000) {
-			give_up();
+			end_game();
 			alert('You win! You clicked ' + map.distance(ll, t) + ' meters away from ' + target.toString());
 		} else {
 			provide_feedback(ll, t);
@@ -129,6 +168,12 @@
 	function provide_feedback(ll, t) {
 		var box1 = document.getElementById('indicator1')
 		var box2 = document.getElementById('indicator2')
+		var box3 = document.getElementById('indicator3')
+		var sol_el = document.getElementById('solution')
+		var guess_el = document.getElementById('guess')
+		writeGuess(ll)
+		// This is always one guess behind
+		console.log('The real elevation is ' + parseInt(sol_el.innerHTML) + ' and the guess is at ' + parseInt(guess_el.innerHTML))
 		if (t.lat > ll.lat) {
 			box1.innerHTML = '+'
 		} else {
@@ -139,8 +184,15 @@
 		} else {
 			box2.innerHTML = '-'
 		}
+		if (parseInt(sol_el.innerHTML) > parseInt(guess_el.innerHTML)) {
+			box3.innerHTML = '+'
+		} else if (parseInt(sol_el.innerHTML) == parseInt(guess_el.innerHTML)) {
+			box3.innerHTML = '='
+		} else {
+			box3.innerHTML = '-'
+		}
 	}
-	function give_up() {
+	function end_game() {
 		L.marker(target, {icon: greenIcon, title: target.toString()}).addTo(map);
 		map.panTo(target)
 		// alert(target.toString())
